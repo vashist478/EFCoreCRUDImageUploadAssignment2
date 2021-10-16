@@ -31,7 +31,7 @@ namespace EFCoreImageUploadAssignment2.Controllers
         [HttpPost]
         public IActionResult CreateDepartment(Department dept)
         {
-
+            ModelState.Remove("DeptId");
             if (ModelState.IsValid)
             {
                 _db.Departments.Add(dept);

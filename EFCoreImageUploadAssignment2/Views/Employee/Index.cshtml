@@ -83,7 +83,7 @@
             else {
 
                 $.ajax({
-                    url: '@Url.Action("DeleteDepartment", "Department")/' + id,
+                    url: '@Url.Action("DeleteEmployee", "Employee")/' + id,
                     method: 'GET',
                     contentType: 'application/json',
                     success: function (res) {
@@ -99,5 +99,9 @@
 
 
     });
+
+
+
+
     </script>
 }
