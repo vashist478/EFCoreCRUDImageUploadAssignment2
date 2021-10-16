@@ -13,6 +13,7 @@ namespace EFCoreImageUploadAssignment2.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int DeptId { get; set; }
 
+        [Required(ErrorMessage ="Please enter department name")]
         public string Name { get; set; }
 
     }

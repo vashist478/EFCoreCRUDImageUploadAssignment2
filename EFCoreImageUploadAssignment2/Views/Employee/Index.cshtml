@@ -58,7 +58,7 @@
                     @Html.ActionLink("Edit", "Edit", new { id = item.EmpId }) |
                     @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
                     @*@Html.ActionLink("Delete", "Delete", new { id = item.EmpId })*@
-                    <a href="javascript:void(0)"  data-id="@item.EmpId" class="btn btn-danger">
+                    <a href="javascript:void(0)" data-id="@item.EmpId" class="btn btn-danger">
                         Delete
                     </a>
                 </td>
@@ -83,7 +83,7 @@
             else {
 
                 $.ajax({
-                    url: '@Url.Action("DeleteEmployee", "Employee")/' + id,
+                    url: '@Url.Action("DeleteDepartment", "Department")/' + id,
                     method: 'GET',
                     contentType: 'application/json',
                     success: function (res) {

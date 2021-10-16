@@ -1,0 +1,70 @@
+﻿@model IEnumerable<EFCoreImageUploadAssignment2.Models.Department>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="CreateDepartment">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.DeptId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DeptId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit Department", "EditDepartment", new { id = item.DeptId }) |
+                    @*@Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |*@
+                    @Html.ActionLink("Delete", "DeleteDepartment", new { id = item.DeptId })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts{
+
+    <script>
+
+    /*SK: Used to delete record */
+    $(document).ready(function () {
+        $(document).on("click", ".btn-danger", function () {
+
+            var id = $(this).attr("data-id");
+            $.ajax({
+                url: '@Url.Action("DeleteProduct","Product")/' + id,
+                method: 'GET',
+                contentType: 'application/json',
+                success: function (res) {
+                  
+                    if (res == "success") {
+                        window.location.reload();
+                    }
+                }
+
+            });
+        });
+
+
+    });
+    </script>
+}
