@@ -34,7 +34,11 @@
                 <td>
                     @Html.ActionLink("Edit Department", "EditDepartment", new { id = item.DeptId }) |
                     @*@Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |*@
-                    @Html.ActionLink("Delete", "DeleteDepartment", new { id = item.DeptId })
+                   
+
+                    <a href="javascript:void(0)" data-id="@item.DeptId" class="btn btn-danger">
+                        Delete
+                    </a>
                 </td>
             </tr>
         }
@@ -48,7 +52,7 @@
      /*SK: Used to delete record */
     $(document).ready(function () {
         $(document).on("click", ".btn-danger", function () {
-
+            debugger;
             var id = $(this).attr("data-id");
 
             if (!confirm("Are you sure?")) {
