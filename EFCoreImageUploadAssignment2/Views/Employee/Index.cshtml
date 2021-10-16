@@ -1,0 +1,103 @@
+﻿@model IEnumerable<EFCoreImageUploadAssignment2.Models.EmployeeViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayName("Employee ID")
+            </th>
+
+            <th>
+                @Html.DisplayName("Employee Name")
+            </th>
+            <th>
+                @Html.DisplayName("Address")
+            </th>
+            <th>
+
+                @Html.DisplayName("Department")
+            </th>
+            <th>
+                @Html.DisplayName("Profile")
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EmpId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Address)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DepartmentName)
+
+                </td>
+                <td>
+                    <input asp-for="@item.ImageId" type="hidden" id="hfImageId" />
+                    <img src="@item.ImagePath" asp-append-version="true" height="50px" width="70px" />
+                </td>
+
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.EmpId }) |
+                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                    @*@Html.ActionLink("Delete", "Delete", new { id = item.EmpId })*@
+                    <a href="javascript:void(0)"  data-id="@item.EmpId" class="btn btn-danger">
+                        Delete
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts{
+
+    <script>
+
+    /*SK: Used to delete record */
+    $(document).ready(function () {
+        $(document).on("click", ".btn-danger", function () {
+
+            var id = $(this).attr("data-id");
+
+            if (!confirm("Are you sure?")) {
+                return false;
+            }
+            else {
+
+                $.ajax({
+                    url: '@Url.Action("DeleteEmployee", "Employee")/' + id,
+                    method: 'GET',
+                    contentType: 'application/json',
+                    success: function (res) {
+
+                        if (res == "success") {
+                            window.location.reload();
+                        }
+                    }
+
+                });
+            }
+        });
+
+
+    });
+    </script>
+}

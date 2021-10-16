@@ -1,0 +1,157 @@
+﻿USE [DbCustomer]
+GO
+/****** Object:  Table [dbo].[__EFMigrationsHistory]    Script Date: 16-10-2021 10:59:24 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[__EFMigrationsHistory](
+	[MigrationId] [nvarchar](150) NOT NULL,
+	[ProductVersion] [nvarchar](32) NOT NULL,
+ CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY CLUSTERED 
+(
+	[MigrationId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Departments]    Script Date: 16-10-2021 10:59:24 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Departments](
+	[DeptId] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [nvarchar](max) NULL,
+ CONSTRAINT [PK_Departments] PRIMARY KEY CLUSTERED 
+(
+	[DeptId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Employees]    Script Date: 16-10-2021 10:59:24 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Employees](
+	[EmpId] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [varchar](80) NOT NULL,
+	[Address] [varchar](250) NOT NULL,
+	[DeptId] [int] NOT NULL,
+	[ImageId] [int] NULL,
+ CONSTRAINT [PK_Employees] PRIMARY KEY CLUSTERED 
+(
+	[EmpId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Image]    Script Date: 16-10-2021 10:59:24 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Image](
+	[ImageId] [int] IDENTITY(1,1) NOT NULL,
+	[Title] [nvarchar](50) NULL,
+	[ImageName] [nvarchar](50) NULL,
+	[ImagePath] [nvarchar](400) NULL,
+ CONSTRAINT [PK_Image] PRIMARY KEY CLUSTERED 
+(
+	[ImageId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[Employees] ADD  DEFAULT ('') FOR [Name]
+GO
+ALTER TABLE [dbo].[Employees] ADD  DEFAULT ('') FOR [Address]
+GO
+ALTER TABLE [dbo].[Employees]  WITH CHECK ADD  CONSTRAINT [FK_Employees_Departments_DeptId] FOREIGN KEY([DeptId])
+REFERENCES [dbo].[Departments] ([DeptId])
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[Employees] CHECK CONSTRAINT [FK_Employees_Departments_DeptId]
+GO
+ALTER TABLE [dbo].[Employees]  WITH CHECK ADD  CONSTRAINT [FK_Employees_Image_ImageId] FOREIGN KEY([ImageId])
+REFERENCES [dbo].[Image] ([ImageId])
+GO
+ALTER TABLE [dbo].[Employees] CHECK CONSTRAINT [FK_Employees_Image_ImageId]
+GO
+/****** Object:  StoredProcedure [dbo].[GetEmployeeDetails]    Script Date: 16-10-2021 10:59:24 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+      
+/*      
+ Author name:  Shahi Kumar      
+ Description:  Get employee record      
+ Created Date: 9/10/2021      
+*/      
+      
+CREATE PROC [dbo].[GetEmployeeDetails]      
+@EmployeeId int       
+AS      
+BEGIN      
+      
+SELECT  E.EmpId,E.Name,E.Address,I.ImagePath,E.DeptId,D.Name ,  
+CASE WHEN E.ImageId IS NULL THEN 0
+ELSE
+E.ImageId  
+END AS ImageId
+FROM Employees E       
+INNER JOIN Departments D       
+ON E.DeptId=D.DeptId      
+LEFT JOIN [Image] I on I.ImageId=E.ImageId    
+WHERE E.EmpId=@EmployeeId      
+END      
+      
+GO
+/****** Object:  StoredProcedure [dbo].[UpdateImage]    Script Date: 16-10-2021 10:59:24 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+    
+/*    
+ Author name:  Shahi Kumar    
+ Description:  Udpate image record    
+ Created Date: 15/10/2021    
+ UpdateImage 72,'',null
+*/    
+    
+CREATE PROC [dbo].[UpdateImage] 
+@ImageId int OUT,
+@ImageName varchar(100),
+@ImagePath varchar(500)
+AS    
+BEGIN    
+    
+	IF(@ImageId>0)
+	BEGIN
+	UPDATE [Image]  SET ImageName=@ImageName,
+	ImagePath=@ImagePath
+	WHERE ImageId=@ImageId
+	set @ImageId=0
+	END
+	
+	ELSE
+	BEGIN
+
+	INSERT INTO [Image](ImageName,ImagePath) VALUES(@ImageName,@ImagePath)
+	set  @ImageId=SCOPE_IDENTITY()
+	END
+
+	
+	select @ImageId as ImageId
+
+END    
+    
+    
+GO
+
+
+
+
+
+
+INSERT into Departments values('Marketing'),('IT'),('Operations'),('Finance'),('Sales')
